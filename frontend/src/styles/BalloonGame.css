@@ -1,0 +1,159 @@
+.balloon-game {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  
+  /* 空のグラデーション */
+  background: linear-gradient(180deg, 
+    #87CEEB 0%,      /* 明るい空色 */
+    #B0E0E6 15%,     /* パウダーブルー */
+    #87CEEB 30%,     /* スカイブルー */
+    #98D8E8 50%,     /* 淡い水色 */
+    #B8E8C8 70%,     /* 地平線付近は緑がかる */
+    #90C695 82%,     /* 草原の始まり */
+    #7CB87C 88%,     /* 草原 */
+    #5A9A5A 94%,     /* 濃い草原 */
+    #4A8A4A 100%     /* 地面 */
+  );
+}
+
+/* 雲の装飾 */
+.balloon-game::before {
+  content: '';
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  width: 120px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+  box-shadow: 
+    30px 10px 0 10px rgba(255, 255, 255, 0.9),
+    -20px 5px 0 5px rgba(255, 255, 255, 0.85),
+    50px -5px 0 15px rgba(255, 255, 255, 0.85);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.balloon-game::after {
+  content: '';
+  position: absolute;
+  top: 12%;
+  right: 15%;
+  width: 100px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 40px;
+  box-shadow: 
+    25px 8px 0 8px rgba(255, 255, 255, 0.85),
+    -15px 3px 0 5px rgba(255, 255, 255, 0.8),
+    40px -3px 0 12px rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scale-container {
+  position: absolute;
+  right: 8px;
+  top: 15px;
+  bottom: 90px;
+  width: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.scale-marker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.scale-value {
+  display: none;
+}
+
+.scale-line {
+  width: 20px;
+  height: 2px;
+  background: rgba(45, 90, 61, 0.4);
+}
+
+.balloons-container {
+  flex: 1;
+  position: relative;
+  margin: 15px 35px 0 15px;
+  z-index: 5;
+}
+
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(45, 90, 61, 0.15);
+}
+
+.balloons-row {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  padding: 0 10px;
+}
+
+/* 地面部分のチームラベル */
+.team-labels {
+  display: flex;
+  background: linear-gradient(180deg, 
+    #4A8A4A 0%,
+    #3D7A3D 50%,
+    #2D6A2D 100%
+  );
+  border-top: 3px solid #5A9A5A;
+  min-height: 70px;
+  margin-right: 35px;
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.team-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 5px;
+  gap: 3px;
+  min-width: 0;
+}
+
+.team-name-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.team-points-label {
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}

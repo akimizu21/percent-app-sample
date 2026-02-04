@@ -1,0 +1,308 @@
+.question-panel {
+  width: 400px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (max-width: 1100px) {
+  .question-panel {
+    width: 350px;
+  }
+}
+
+.question-nav {
+  display: flex;
+  gap: 8px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--bg-darker);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  border-color: var(--primary);
+}
+
+.nav-btn.active {
+  background: var(--gradient-1);
+  border-color: var(--primary);
+}
+
+.nav-btn.answered {
+  background: var(--text-muted);
+  border-color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.question-display {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.question-label {
+  background: var(--gradient-1);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.answered-notice {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.question-display .question-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+}
+
+.no-question {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px;
+}
+
+.answer-inputs {
+  margin-bottom: 25px;
+}
+
+.answer-inputs h4 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+}
+
+.team-answer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.team-answer-row:last-child {
+  border-bottom: none;
+}
+
+.team-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-answer-row .team-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.answer-field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.answer-field input {
+  width: 70px;
+  background: var(--bg-darker);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+
+.answer-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.answer-field .percent-sign {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.1rem;
+}
+
+.result-display {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.result-display h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.correct-answer {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+}
+
+.answer-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 10px;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: var(--bg-darker);
+  border-radius: 10px;
+}
+
+.result-row .team-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.result-row .team-name {
+  flex: 1;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-row .team-answer {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.result-row .difference {
+  font-weight: 700;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.result-row .difference.perfect {
+  color: var(--secondary);
+}
+
+.result-row .new-points {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+.btn-next {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.1rem;
+}
+
+.game-complete {
+  padding: 40px 25px;
+  text-align: center;
+}
+
+.game-complete h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.final-standings {
+  background: var(--bg-darker);
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.final-standings h3 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+}
+
+.standing-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.standing-row:last-child {
+  border-bottom: none;
+}
+
+.standing-row.winner {
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 10px;
+  border-bottom: none;
+  margin-bottom: 5px;
+}
+
+.standing-row .rank {
+  font-size: 1.3rem;
+  min-width: 40px;
+}
+
+.standing-row .team-name {
+  flex: 1;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.standing-row .team-points {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--accent);
+}

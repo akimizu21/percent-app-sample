@@ -1,0 +1,102 @@
+# %パーセントクイズ - ネプリーグ風気球バトルゲーム
+
+## 概要
+ネプリーグのパーセントクイズを模したWebアプリケーションです。
+各チームが気球に乗り、解答の誤差に応じて気球が下がっていきます。
+
+## 技術スタック
+- **フロントエンド**: React + TypeScript + Vite + Framer Motion
+- **バックエンド**: Flask + SQLAlchemy
+- **データベース**: PostgreSQL (Neon)
+- **デプロイ**: Render
+
+## 機能
+- ✅ チームの作成・編集・削除
+- ✅ チーム名とカラーの設定
+- ✅ 問題の作成・編集・削除（最大6問）
+- ✅ 正解パーセントの設定
+- ✅ 各チームの解答入力
+- ✅ 誤差計算と持ち点の減算
+- ✅ 気球のアニメーション（スムーズに下降）
+- ✅ 風船の縮小表現
+- ✅ ゲームのリセット機能
+
+## セットアップ
+
+### バックエンド
+
+```bash
+cd backend
+pip install -r requirements.txt
+
+# .envファイルを作成（.env.exampleをコピー）
+cp .env.example .env
+
+# .envファイルを編集してDATABASE_URLとSECRET_KEYを設定
+# SECRET_KEYの生成: python -c "import secrets; print(secrets.token_hex(32))"
+
+# 起動
+python app.py
+```
+
+### フロントエンド
+
+```bash
+cd frontend
+npm install
+
+# 環境変数設定（.envファイル作成）
+echo "VITE_API_URL=http://localhost:5000" > .env
+
+# 開発サーバー起動
+npm run dev
+```
+
+## Render + Neon デプロイ手順
+
+### 1. Neon (PostgreSQL)
+1. [Neon](https://neon.tech/) でアカウント作成
+2. 新しいプロジェクト作成
+3. 接続文字列をコピー
+
+### 2. バックエンド (Render)
+1. [Render](https://render.com/) でWeb Service作成
+2. リポジトリを接続
+3. Root Directory: `backend`
+4. Build Command: `pip install -r requirements.txt`
+5. Start Command: `gunicorn app:app`
+6. 環境変数追加:
+   - `DATABASE_URL`: Neonの接続文字列
+   - `SECRET_KEY`: 強力なランダム文字列（`python -c "import secrets; print(secrets.token_hex(32))"`で生成）
+
+### 3. フロントエンド (Render)
+1. Static Site作成
+2. リポジトリを接続
+3. Root Directory: `frontend`
+4. Build Command: `npm install && npm run build`
+5. Publish Directory: `dist`
+6. 環境変数追加:
+   - `VITE_API_URL`: バックエンドのURL
+
+## API エンドポイント
+
+### ゲーム
+- `GET /api/games` - ゲーム一覧
+- `POST /api/games` - ゲーム作成
+- `GET /api/games/:id` - ゲーム詳細
+- `DELETE /api/games/:id` - ゲーム削除
+- `POST /api/games/:id/reset` - ゲームリセット
+
+### チーム
+- `POST /api/games/:id/teams` - チーム追加
+- `PUT /api/teams/:id` - チーム更新
+- `DELETE /api/teams/:id` - チーム削除
+
+### 問題
+- `POST /api/games/:id/questions` - 問題追加
+- `PUT /api/questions/:id` - 問題更新
+- `DELETE /api/questions/:id` - 問題削除
+- `POST /api/questions/:id/submit` - 解答送信・採点
+
+## ライセンス
+MIT

@@ -1,0 +1,107 @@
+.display-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  
+  /* 空のグラデーション（BalloonGameと同じ） */
+  background: linear-gradient(180deg, 
+    #87CEEB 0%,
+    #B0E0E6 15%,
+    #87CEEB 30%,
+    #98D8E8 50%,
+    #B8E8C8 70%,
+    #90C695 82%,
+    #7CB87C 88%,
+    #5A9A5A 94%,
+    #4A8A4A 100%
+  );
+}
+
+.display-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-size: 1.5rem;
+  color: #2D5A3D;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* 結果オーバーレイ */
+.result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.result-card {
+  background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+  border: 2px solid #334155;
+  border-radius: 24px;
+  padding: 50px 60px;
+  text-align: center;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.result-card h2 {
+  font-size: 3rem;
+  margin-bottom: 40px;
+  color: #F8FAFC;
+}
+
+.final-rankings {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ranking-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 30px;
+  background: #0F172A;
+  border-radius: 12px;
+  font-size: 1.3rem;
+}
+
+.ranking-row.winner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.1) 100%);
+  border: 2px solid rgba(245, 158, 11, 0.6);
+}
+
+.ranking-row .rank {
+  font-size: 1.8rem;
+  min-width: 60px;
+}
+
+.ranking-row .team-name {
+  flex: 1;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.ranking-row .team-points {
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #F59E0B;
+}

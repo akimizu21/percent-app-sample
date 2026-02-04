@@ -1,0 +1,410 @@
+.control-page {
+  min-height: 100vh;
+  background: var(--bg-darker);
+  display: flex;
+  flex-direction: column;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+
+.control-header h1 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.control-content {
+  flex: 1;
+  padding: 25px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+/* チーム状況 */
+.teams-status {
+  margin-bottom: 25px;
+}
+
+.teams-status h3 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.teams-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.team-status-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  min-width: 120px;
+}
+
+.team-color-bar {
+  width: 4px;
+  height: 30px;
+  border-radius: 2px;
+}
+
+.team-status-card .team-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.team-status-card .team-points {
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-left: auto;
+}
+
+/* 問題ナビゲーション */
+.question-nav {
+  margin-bottom: 25px;
+}
+
+.question-nav h3 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  position: relative;
+  width: 60px;
+  height: 50px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  border-color: var(--primary);
+}
+
+.nav-btn.active {
+  background: var(--gradient-1);
+  border-color: var(--primary);
+}
+
+.nav-btn.answered {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--secondary);
+}
+
+.nav-btn .check {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.7rem;
+  color: var(--secondary);
+}
+
+/* メインコンテンツ */
+.main-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px;
+}
+
+/* 問題入力 */
+.question-input .question-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.question-number {
+  background: var(--gradient-1);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.answered-badge {
+  background: var(--text-muted);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.question-input .question-text {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.correct-hint {
+  color: var(--accent);
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+}
+
+.answer-inputs {
+  margin-bottom: 25px;
+}
+
+.answer-inputs h4 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+}
+
+.team-answer-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: var(--bg-darker);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.team-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-answer-row .team-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.answer-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.answer-field input {
+  width: 80px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.answer-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.percent-sign {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 18px;
+  font-size: 1.2rem;
+}
+
+/* 結果表示 */
+.result-display h3 {
+  font-size: 1.3rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.correct-answer-box {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+}
+
+.correct-answer-box .answer-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 8px;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: var(--bg-darker);
+  border-radius: 10px;
+}
+
+.result-row .team-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.result-row .team-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.result-row .team-answer {
+  color: var(--text-secondary);
+}
+
+.result-row .difference {
+  font-weight: 700;
+  color: var(--danger);
+  min-width: 50px;
+  text-align: right;
+}
+
+.result-row .difference.perfect {
+  color: var(--secondary);
+}
+
+.result-row .new-points {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ゲーム終了 */
+.game-complete {
+  text-align: center;
+  padding: 20px;
+}
+
+.game-complete h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+}
+
+.result-control {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: var(--bg-darker);
+  border-radius: 12px;
+}
+
+.btn-show-result {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.btn-show-result:hover {
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
+}
+
+.result-status {
+  margin-top: 15px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.final-standings {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.final-standings h3 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+}
+
+.standing-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: var(--bg-darker);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.standing-row.winner {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.standing-row .rank {
+  font-size: 1.3rem;
+  min-width: 40px;
+}
+
+.standing-row .team-name {
+  flex: 1;
+  font-weight: 700;
+}
+
+.standing-row .team-points {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.no-question {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px;
+}

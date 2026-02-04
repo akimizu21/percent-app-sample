@@ -1,0 +1,314 @@
+.balloon-wrapper {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  min-width: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.balloon-unit {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 気球本体 */
+.balloon-body {
+  width: 90px;
+  height: 110px;
+  border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+  position: relative;
+  box-shadow: 
+    inset -15px -15px 30px rgba(0, 0, 0, 0.25),
+    inset 8px 8px 20px rgba(255, 255, 255, 0.35),
+    0 10px 30px rgba(0, 0, 0, 0.3);
+  transform-origin: bottom center;
+}
+
+.balloon-highlight {
+  position: absolute;
+  top: 15px;
+  left: 18px;
+  width: 25px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  filter: blur(8px);
+}
+
+.balloon-highlight-small {
+  position: absolute;
+  top: 25px;
+  left: 28px;
+  width: 10px;
+  height: 15px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  filter: blur(3px);
+}
+
+/* 結び目 */
+.balloon-knot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: -3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ロープ */
+.balloon-rope {
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(180deg, 
+    rgba(139, 90, 60, 0.9) 0%,
+    rgba(139, 90, 60, 0.6) 100%
+  );
+  transition: opacity 0.3s ease;
+}
+
+/* バスケット */
+.balloon-basket {
+  margin-top: -2px;
+  position: relative;
+}
+
+.basket-body {
+  background: linear-gradient(180deg, 
+    #A0724A 0%, 
+    #8B5A3C 30%,
+    #6B4423 70%,
+    #4A2F18 100%
+  );
+  border: 3px solid;
+  border-radius: 4px 4px 10px 10px;
+  padding: 8px 14px;
+  min-width: 60px;
+  max-width: 90px;
+  text-align: center;
+  box-shadow: 
+    inset 0 3px 6px rgba(255, 255, 255, 0.15),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2),
+    0 5px 15px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s ease;
+}
+
+.basket-team-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* クラッシュ時のオーバーレイ */
+.balloon-basket.crashed .basket-body {
+  filter: grayscale(50%);
+}
+
+.crashed-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3.5rem;
+  color: #ff3333;
+  font-weight: 900;
+  text-shadow: 
+    0 0 10px rgba(255, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ==================== */
+/* 爆発エフェクト */
+/* ==================== */
+.explosion-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.explosion-flash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  filter: blur(15px);
+}
+
+.explosion-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.explosion-debris {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 12px;
+  border-radius: 3px;
+  margin-left: -9px;
+  margin-top: -6px;
+}
+
+.explosion-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6rem;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
+}
+
+/* ==================== */
+/* レスポンシブ対応 */
+/* ==================== */
+@media (min-width: 1400px) {
+  .balloon-body {
+    width: 110px;
+    height: 135px;
+  }
+  
+  .balloon-highlight {
+    width: 30px;
+    height: 42px;
+  }
+  
+  .balloon-rope {
+    height: 40px;
+  }
+  
+  .basket-body {
+    padding: 10px 18px;
+    min-width: 70px;
+  }
+  
+  .basket-team-name {
+    font-size: 0.95rem;
+  }
+  
+  .explosion-text {
+    font-size: 5rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .balloon-body {
+    width: 70px;
+    height: 86px;
+  }
+  
+  .balloon-highlight {
+    top: 12px;
+    left: 14px;
+    width: 18px;
+    height: 26px;
+  }
+  
+  .balloon-highlight-small {
+    top: 18px;
+    left: 22px;
+    width: 8px;
+    height: 12px;
+  }
+  
+  .balloon-knot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .balloon-rope {
+    height: 22px;
+  }
+  
+  .basket-body {
+    padding: 6px 10px;
+    min-width: 45px;
+  }
+  
+  .basket-team-name {
+    font-size: 0.7rem;
+  }
+  
+  .explosion-particle {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .explosion-text {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .balloon-body {
+    width: 55px;
+    height: 68px;
+  }
+  
+  .balloon-highlight {
+    top: 10px;
+    left: 10px;
+    width: 14px;
+    height: 20px;
+  }
+  
+  .balloon-highlight-small {
+    display: none;
+  }
+  
+  .balloon-knot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .balloon-rope {
+    height: 16px;
+  }
+  
+  .basket-body {
+    padding: 4px 8px;
+    min-width: 35px;
+    border-width: 2px;
+  }
+  
+  .basket-team-name {
+    font-size: 0.6rem;
+  }
+  
+  .crashed-overlay {
+    font-size: 2.5rem;
+  }
+  
+  .explosion-particle {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .explosion-text {
+    font-size: 4rem;
+  }
+}

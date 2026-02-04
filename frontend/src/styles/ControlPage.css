@@ -173,6 +173,15 @@
   font-size: 0.85rem;
 }
 
+.edit-badge {
+  background: #F59E0B;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
 .question-input .question-text {
   font-size: 1.3rem;
   line-height: 1.6;
@@ -326,6 +335,54 @@
   color: var(--accent);
   min-width: 80px;
   text-align: right;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.result-actions .btn-secondary {
+  align-self: center;
+}
+
+/* 回答済み画面 */
+.answered-actions {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.answered-message {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+/* 編集アクション */
+.edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-actions .btn-secondary {
+  align-self: center;
+}
+
+/* 編集ヒント */
+.edit-hint {
+  margin-top: 30px;
+  padding: 15px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.edit-hint p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 /* ゲーム終了 */

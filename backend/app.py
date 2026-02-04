@@ -291,6 +291,104 @@ def submit_answers(question_id):
     db.session.commit()
     
     return jsonify({
+        'question_id': question.id,
+        'correct_answer': question.correct_answer,
+        'results': sorted(results, key=lambda x: x['difference'])
+    })
+
+# 解答修正用API - 全チームのポイントを再計算
+@app.route('/api/questions/<int:question_id>/revise', methods=['POST'])
+def revise_answers(question_id):
+    question = Question.query.get_or_404(question_id)
+    game = Game.query.get_or_404(question.game_id)
+    data = request.json
+    new_answers = data.get('answers', [])  # [{team_id: x, answer: y}, ...]
+    
+    # 各チームの全問題の回答を取得し、ポイントを再計算
+    results = []
+    
+    for ta in new_answers:
+        team = Team.query.get(ta['team_id'])
+        if not team:
+            continue
+        
+        new_answer_value = max(0, min(100, ta['answer']))
+        new_difference = abs(new_answer_value - question.correct_answer)
+        
+        # この問題の回答を更新
+        existing_answer = TeamAnswer.query.filter_by(
+            team_id=team.id,
+            question_id=question_id
+        ).first()
+        
+        if existing_answer:
+            existing_answer.answer = new_answer_value
+            existing_answer.difference = new_difference
+        else:
+            team_answer = TeamAnswer(
+                team_id=team.id,
+                question_id=question_id,
+                answer=new_answer_value,
+                difference=new_difference
+            )
+            db.session.add(team_answer)
+    
+    db.session.flush()  # 変更を一時反映
+    
+    # 全チームのポイントを再計算（100点から全問題の差分を引く）
+    for team in game.teams:
+        total_difference = 0
+        all_answers = TeamAnswer.query.filter_by(team_id=team.id).all()
+        for ans in all_answers:
+            # このゲームの問題の回答のみ計算
+            q = Question.query.get(ans.question_id)
+            if q and q.game_id == game.id:
+                total_difference += ans.difference
+        
+        team.points = max(0, 100 - total_difference)
+        
+        # この問題の結果を返す
+        current_answer = TeamAnswer.query.filter_by(
+            team_id=team.id,
+            question_id=question_id
+        ).first()
+        
+        if current_answer:
+            results.append({
+                'team_id': team.id,
+                'team_name': team.name,
+                'answer': current_answer.answer,
+                'correct_answer': question.correct_answer,
+                'difference': current_answer.difference,
+                'new_points': team.points
+            })
+    
+    db.session.commit()
+    
+    return jsonify({
+        'question_id': question.id,
+        'correct_answer': question.correct_answer,
+        'results': sorted(results, key=lambda x: x['difference'])
+    })
+
+# 問題の回答データを取得するAPI
+@app.route('/api/questions/<int:question_id>/answers', methods=['GET'])
+def get_question_answers(question_id):
+    question = Question.query.get_or_404(question_id)
+    answers = TeamAnswer.query.filter_by(question_id=question_id).all()
+    
+    return jsonify({
+        'question_id': question.id,
+        'correct_answer': question.correct_answer,
+        'answers': [{
+            'team_id': a.team_id,
+            'answer': a.answer,
+            'difference': a.difference
+        } for a in answers]
+    })
+    db.session.commit()
+    
+    return jsonify({
         'question_id': question_id,
         'correct_answer': question.correct_answer,
         'results': results

@@ -6,6 +6,12 @@ import '../styles/ControlPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
+interface SavedAnswer {
+  team_id: number;
+  answer: number;
+  difference: number;
+}
+
 function ControlPage() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
@@ -16,6 +22,8 @@ function ControlPage() {
   const [lastResult, setLastResult] = useState<SubmitResponse | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resultShownOnDisplay, setResultShownOnDisplay] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [savedAnswers, setSavedAnswers] = useState<SavedAnswer[]>([]);
 
   const fetchGame = useCallback(async () => {
     if (!gameId) return;
@@ -39,6 +47,24 @@ function ControlPage() {
     }
   }, [gameId]);
 
+  // 問題の保存済み回答を取得
+  const fetchSavedAnswers = useCallback(async (questionId: number) => {
+    try {
+      const res = await fetch(`${API_URL}/api/questions/${questionId}/answers`);
+      const data = await res.json();
+      setSavedAnswers(data.answers || []);
+      
+      // 保存済み回答をteamAnswersに反映
+      const answersMap: Record<number, number> = {};
+      data.answers?.forEach((a: SavedAnswer) => {
+        answersMap[a.team_id] = a.answer;
+      });
+      setTeamAnswers(answersMap);
+    } catch (error) {
+      console.error('Failed to fetch saved answers:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchGame();
     checkResultStatus();
@@ -54,6 +80,8 @@ function ControlPage() {
       setShowResult(false);
       setLastResult(null);
       setResultShownOnDisplay(false);
+      setIsEditMode(false);
+      setSavedAnswers([]);
       await fetchGame();
     } catch (error) {
       console.error('Failed to reset game:', error);
@@ -65,10 +93,17 @@ function ControlPage() {
   };
 
   const handleAnswerChange = (teamId: number, value: string) => {
-    setTeamAnswers({
-      ...teamAnswers,
-      [teamId]: Math.max(0, Math.min(100, parseInt(value) || 0))
-    });
+    const numValue = parseInt(value);
+    if (value === '') {
+      const newAnswers = { ...teamAnswers };
+      delete newAnswers[teamId];
+      setTeamAnswers(newAnswers);
+    } else {
+      setTeamAnswers({
+        ...teamAnswers,
+        [teamId]: Math.max(0, Math.min(100, numValue || 0))
+      });
+    }
   };
 
   const submitAnswers = async () => {
@@ -98,7 +133,6 @@ function ControlPage() {
       const result: SubmitResponse = await res.json();
       setLastResult(result);
       setShowResult(true);
-      setTeamAnswers({});
       
       setTimeout(() => {
         fetchGame();
@@ -110,9 +144,68 @@ function ControlPage() {
     }
   };
 
+  // 解答を修正して再計算
+  const reviseAnswers = async () => {
+    if (!game) return;
+    const currentQuestion = game.questions[currentQuestionIndex];
+    if (!currentQuestion) return;
+    
+    // 全チームの解答が入力されているかチェック
+    const missingTeams = game.teams.filter(team => teamAnswers[team.id] === undefined);
+    if (missingTeams.length > 0) {
+      alert(`すべてのチームの解答を入力してください。\n未入力: ${missingTeams.map(t => t.name).join(', ')}`);
+      return;
+    }
+    
+    const answers = game.teams.map(team => ({
+      team_id: team.id,
+      answer: teamAnswers[team.id]
+    }));
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/questions/${currentQuestion.id}/revise`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers })
+      });
+      const result: SubmitResponse = await res.json();
+      setLastResult(result);
+      setShowResult(true);
+      setIsEditMode(false);
+      
+      setTimeout(() => {
+        fetchGame();
+      }, 500);
+    } catch (error) {
+      console.error('Failed to revise answers:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 編集モードを開始
+  const startEditMode = async () => {
+    if (!game) return;
+    const currentQuestion = game.questions[currentQuestionIndex];
+    if (!currentQuestion) return;
+    
+    await fetchSavedAnswers(currentQuestion.id);
+    setIsEditMode(true);
+    setShowResult(false);
+  };
+
+  // 編集をキャンセル
+  const cancelEdit = () => {
+    setIsEditMode(false);
+    setTeamAnswers({});
+  };
+
   const nextQuestion = () => {
     setShowResult(false);
     setLastResult(null);
+    setTeamAnswers({});
+    setIsEditMode(false);
     if (game && currentQuestionIndex < game.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
@@ -121,6 +214,8 @@ function ControlPage() {
   const goToQuestion = (index: number) => {
     setShowResult(false);
     setLastResult(null);
+    setTeamAnswers({});
+    setIsEditMode(false);
     setCurrentQuestionIndex(index);
   };
 
@@ -219,7 +314,7 @@ function ControlPage() {
         {/* メインコンテンツ */}
         <div className="main-content">
           <AnimatePresence mode="wait">
-            {allAnswered ? (
+            {allAnswered && !isEditMode ? (
               <motion.div
                 key="complete"
                 className="game-complete"
@@ -258,6 +353,10 @@ function ControlPage() {
                       </div>
                     ))}
                 </div>
+
+                <div className="edit-hint">
+                  <p>💡 解答を修正したい場合は、上の問題ボタン（Q1, Q2...）をクリックして編集できます</p>
+                </div>
               </motion.div>
             ) : showResult && lastResult ? (
               <motion.div
@@ -289,9 +388,14 @@ function ControlPage() {
                       );
                     })}
                 </div>
-                <button className="btn-primary btn-large" onClick={nextQuestion}>
-                  {currentQuestionIndex < questions.length - 1 ? '次の問題へ →' : '完了'}
-                </button>
+                <div className="result-actions">
+                  <button className="btn-primary btn-large" onClick={nextQuestion}>
+                    {currentQuestionIndex < questions.length - 1 ? '次の問題へ →' : '完了'}
+                  </button>
+                  <button className="btn-secondary" onClick={startEditMode}>
+                    ✏️ この問題の解答を修正
+                  </button>
+                </div>
               </motion.div>
             ) : currentQuestion ? (
               <motion.div
@@ -303,17 +407,23 @@ function ControlPage() {
               >
                 <div className="question-header">
                   <span className="question-number">Q{currentQuestion.order_num}</span>
-                  {currentQuestion.is_answered && (
+                  {currentQuestion.is_answered && !isEditMode && (
                     <span className="answered-badge">回答済み</span>
+                  )}
+                  {isEditMode && (
+                    <span className="edit-badge">編集中</span>
                   )}
                 </div>
                 <p className="question-text">{currentQuestion.question_text}</p>
                 <p className="correct-hint">（正解: {currentQuestion.correct_answer}%）</p>
 
-                {!currentQuestion.is_answered && (
+                {/* 未回答 または 編集モード の場合に入力フォームを表示 */}
+                {(!currentQuestion.is_answered || isEditMode) && (
                   <>
                     <div className="answer-inputs">
-                      <h4>各チームの解答を入力</h4>
+                      <h4>
+                        {isEditMode ? '解答を修正' : '各チームの解答を入力'}
+                      </h4>
                       {teams.map(team => (
                         <div key={team.id} className="team-answer-row">
                           <span className="team-indicator" style={{ backgroundColor: team.color }} />
@@ -331,14 +441,43 @@ function ControlPage() {
                         </div>
                       ))}
                     </div>
-                    <button 
-                      className="btn-primary btn-large btn-submit"
-                      onClick={submitAnswers}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? '計算中...' : '🚀 解答を確定して反映'}
-                    </button>
+                    
+                    {isEditMode ? (
+                      <div className="edit-actions">
+                        <button 
+                          className="btn-primary btn-large btn-submit"
+                          onClick={reviseAnswers}
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? '計算中...' : '✅ 修正を確定して再計算'}
+                        </button>
+                        <button 
+                          className="btn-secondary"
+                          onClick={cancelEdit}
+                        >
+                          キャンセル
+                        </button>
+                      </div>
+                    ) : (
+                      <button 
+                        className="btn-primary btn-large btn-submit"
+                        onClick={submitAnswers}
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? '計算中...' : '🚀 解答を確定して反映'}
+                      </button>
+                    )}
                   </>
+                )}
+
+                {/* 回答済みで編集モードでない場合 */}
+                {currentQuestion.is_answered && !isEditMode && (
+                  <div className="answered-actions">
+                    <p className="answered-message">この問題は回答済みです</p>
+                    <button className="btn-secondary btn-large" onClick={startEditMode}>
+                      ✏️ 解答を修正する
+                    </button>
+                  </div>
                 )}
               </motion.div>
             ) : (

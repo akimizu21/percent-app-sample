@@ -116,8 +116,9 @@
   padding: 0 10px;
 }
 
-/* 地面部分のチームラベル */
+/* 地面部分のチームラベル - 炎エフェクト付き */
 .team-labels {
+  position: relative;
   display: flex;
   background: linear-gradient(180deg, 
     #4A8A4A 0%,
@@ -130,6 +131,129 @@
   box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* 炎のコンテナ */
+.fire-container {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  right: 35px;
+  height: 120px;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+/* 個々の炎 */
+.flame {
+  position: relative;
+  width: 50px;
+  height: 100px;
+}
+
+.flame::before,
+.flame::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flicker 0.3s ease-in-out infinite alternate;
+}
+
+.flame::before {
+  width: 45px;
+  height: 90px;
+  background: linear-gradient(0deg, 
+    #ff2200 0%,
+    #ff4500 20%,
+    #ff6a00 40%,
+    #ffa500 70%,
+    #ffcc00 100%
+  );
+  filter: blur(3px);
+  opacity: 0.9;
+}
+
+.flame::after {
+  width: 25px;
+  height: 60px;
+  background: linear-gradient(0deg, 
+    #ff6600 0%,
+    #ffcc00 40%,
+    #ffff00 70%,
+    #ffffcc 100%
+  );
+  filter: blur(2px);
+}
+
+.flame:nth-child(odd)::before {
+  animation-delay: 0.1s;
+  height: 95px;
+}
+
+.flame:nth-child(even)::before {
+  animation-delay: 0.15s;
+  height: 85px;
+}
+
+.flame:nth-child(3n)::before {
+  height: 100px;
+  width: 50px;
+}
+
+.flame:nth-child(3n+1)::before {
+  height: 80px;
+}
+
+.flame:nth-child(4n)::after {
+  animation-delay: 0.2s;
+}
+
+@keyframes flicker {
+  0% {
+    transform: translateX(-50%) scaleY(1) scaleX(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateX(-48%) scaleY(1.05) scaleX(0.95);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-52%) scaleY(0.95) scaleX(1.05);
+    opacity: 0.85;
+  }
+}
+
+/* 炎の輝き・熱気 */
+.fire-glow {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  right: 35px;
+  height: 150px;
+  background: linear-gradient(0deg, 
+    rgba(255, 80, 0, 0.5) 0%,
+    rgba(255, 120, 0, 0.3) 30%,
+    rgba(255, 150, 0, 0.15) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  animation: glowPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .team-label {
   flex: 1;
   display: flex;
@@ -139,6 +263,8 @@
   padding: 10px 5px;
   gap: 3px;
   min-width: 0;
+  position: relative;
+  z-index: 3;
 }
 
 .team-name-label {
@@ -156,4 +282,62 @@
   font-size: 1.3rem;
   font-weight: 800;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* デデデン！エフェクト用オーバーレイ */
+.dramatic-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.dramatic-text {
+  font-size: 8rem;
+  font-weight: 900;
+  color: #FFD700;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.8),
+    0 0 40px rgba(255, 150, 0, 0.6),
+    0 0 60px rgba(255, 100, 0, 0.4),
+    4px 4px 0 #FF4500,
+    -4px -4px 0 #FF4500,
+    4px -4px 0 #FF4500,
+    -4px 4px 0 #FF4500;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 800px) {
+  .dramatic-text {
+    font-size: 5rem;
+  }
+  
+  .flame {
+    width: 35px;
+    height: 70px;
+  }
+  
+  .flame::before {
+    width: 30px;
+    height: 60px;
+  }
+  
+  .flame::after {
+    width: 18px;
+    height: 40px;
+  }
+  
+  .fire-container {
+    height: 80px;
+  }
+  
+  .fire-glow {
+    height: 100px;
+  }
 }

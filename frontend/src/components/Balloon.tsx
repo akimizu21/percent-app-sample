@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/Balloon.css';
 import type { Team } from '../types';
@@ -12,26 +12,26 @@ function Balloon({ team, totalTeams }: BalloonProps) {
   const points = team.points;
   const [hasExploded, setHasExploded] = useState(false);
   const [showExplosion, setShowExplosion] = useState(false);
-  const [prevPoints, setPrevPoints] = useState(points);
+  const prevPointsRef = useRef(points);
   
   // 0点になった瞬間を検知
   useEffect(() => {
-    if (prevPoints > 0 && points === 0 && !hasExploded) {
+    if (prevPointsRef.current > 0 && points === 0 && !hasExploded) {
       setShowExplosion(true);
       setHasExploded(true);
-      // 爆発エフェクトを2秒後に消す
       setTimeout(() => {
         setShowExplosion(false);
       }, 2000);
     }
-    setPrevPoints(points);
-  }, [points, prevPoints, hasExploded]);
+    prevPointsRef.current = points;
+  }, [points, hasExploded]);
 
   // リセット時に状態をリセット
   useEffect(() => {
     if (points === 100) {
       setHasExploded(false);
       setShowExplosion(false);
+      prevPointsRef.current = 100;
     }
   }, [points]);
   

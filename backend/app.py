@@ -22,7 +22,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-i
 db = SQLAlchemy(app)
 
 # 初期持ち点の設定
-INITIAL_POINTS = 500
+INITIAL_POINTS = 400
 
 # Models
 class Game(db.Model):

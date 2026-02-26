@@ -9,7 +9,7 @@ interface BalloonProps {
 }
 
 // 初期持ち点
-const INITIAL_POINTS = 500;
+const INITIAL_POINTS = 400;
 
 function Balloon({ team, totalTeams }: BalloonProps) {
   const points = team.points;

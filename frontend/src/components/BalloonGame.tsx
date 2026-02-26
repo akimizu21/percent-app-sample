@@ -9,10 +9,10 @@ interface BalloonGameProps {
 }
 
 // 初期持ち点
-const INITIAL_POINTS = 500;
+const INITIAL_POINTS = 400;
 
 function BalloonGame({ teams }: BalloonGameProps) {
-  // スケールマーカー（500点から0点まで50点刻み）
+  // スケールマーカー（400点から0点まで50点刻み）
   const scaleMarkers = Array.from({ length: 11 }, (_, i) => INITIAL_POINTS - i * (INITIAL_POINTS / 10));
   
   const [showDramatic, setShowDramatic] = useState(false);

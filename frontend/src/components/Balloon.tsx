@@ -8,6 +8,9 @@ interface BalloonProps {
   totalTeams: number;
 }
 
+// 初期持ち点
+const INITIAL_POINTS = 500;
+
 function Balloon({ team, totalTeams }: BalloonProps) {
   const points = team.points;
   const [hasExploded, setHasExploded] = useState(false);
@@ -28,18 +31,18 @@ function Balloon({ team, totalTeams }: BalloonProps) {
 
   // リセット時に状態をリセット
   useEffect(() => {
-    if (points === 100) {
+    if (points === INITIAL_POINTS) {
       setHasExploded(false);
       setShowExplosion(false);
-      prevPointsRef.current = 100;
+      prevPointsRef.current = INITIAL_POINTS;
     }
   }, [points]);
   
-  // 気球のサイズ: 100点で100%、0点で0%
-  const balloonScale = points > 0 ? 0.3 + (points / 100) * 0.7 : 0;
+  // 気球のサイズ: 500点で100%、0点で0%
+  const balloonScale = points > 0 ? 0.3 + (points / INITIAL_POINTS) * 0.7 : 0;
   
-  // 位置: 0点=5%、100点=75%
-  const verticalPosition = 5 + (points / 100) * 70;
+  // 位置: 0点=5%、500点=75%
+  const verticalPosition = 5 + (points / INITIAL_POINTS) * 70;
 
   // 爆発パーティクルの生成
   const explosionParticles = Array.from({ length: 12 }, (_, i) => ({

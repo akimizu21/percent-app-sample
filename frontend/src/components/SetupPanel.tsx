@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/SetupPanel.css';
-import type { Game } from '../types';
+import type { Game, Team, Question } from '../types';
 
 const TEAM_COLORS = [
   '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
   '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F',
-  '#FF9F43', '#EE5A24', '#6C5CE7', '#00CEC9'
+  '#FF9F43', '#EE5A24', '#6C5CE7', '#00CEC9',
+  '#8B4513', '#2C3E50'  // 茶色、黒
 ];
 
 interface SetupPanelProps {
@@ -39,7 +40,7 @@ function SetupPanel({ game, onRefresh, onBack, onStart, onReset, apiUrl }: Setup
     }
   };
 
-  const updateTeam = async (teamId: number, data: { name?: string; color?: string }) => {
+  const updateTeam = async (teamId: number, data: Partial<Team>) => {
     try {
       await fetch(`${apiUrl}/api/teams/${teamId}`, {
         method: 'PUT',
@@ -81,7 +82,7 @@ function SetupPanel({ game, onRefresh, onBack, onStart, onReset, apiUrl }: Setup
     }
   };
 
-  const updateQuestion = async (questionId: number, data: { question_text?: string; correct_answer?: number }) => {
+  const updateQuestion = async (questionId: number, data: Partial<Question>) => {
     try {
       await fetch(`${apiUrl}/api/questions/${questionId}`, {
         method: 'PUT',
@@ -120,7 +121,7 @@ function SetupPanel({ game, onRefresh, onBack, onStart, onReset, apiUrl }: Setup
           <button 
             className="btn-primary" 
             onClick={onStart}
-            disabled={!game.teams?.length || !game.questions?.length}
+            disabled={game.teams?.length === 0 || game.questions?.length === 0}
           >
             ゲーム開始 →
           </button>
@@ -175,8 +176,8 @@ function SetupPanel({ game, onRefresh, onBack, onStart, onReset, apiUrl }: Setup
                       <button 
                         className="btn-save"
                         onClick={() => {
-                          const input = document.getElementById(`team-name-${team.id}`) as HTMLInputElement;
-                          updateTeam(team.id, { name: input.value });
+                          const nameInput = document.getElementById(`team-name-${team.id}`) as HTMLInputElement;
+                          updateTeam(team.id, { name: nameInput.value });
                         }}
                       >
                         保存
@@ -208,7 +209,7 @@ function SetupPanel({ game, onRefresh, onBack, onStart, onReset, apiUrl }: Setup
                 )}
               </motion.div>
             ))}
-            {!game.teams?.length && (
+            {game.teams?.length === 0 && (
               <p className="empty-message">チームを追加してください</p>
             )}
           </div>
@@ -310,7 +311,7 @@ function SetupPanel({ game, onRefresh, onBack, onStart, onReset, apiUrl }: Setup
                 )}
               </motion.div>
             ))}
-            {!game.questions?.length && (
+            {game.questions?.length === 0 && (
               <p className="empty-message">問題を追加してください</p>
             )}
           </div>

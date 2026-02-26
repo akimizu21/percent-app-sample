@@ -8,8 +8,13 @@ interface BalloonGameProps {
   teams: Team[];
 }
 
+// 初期持ち点
+const INITIAL_POINTS = 500;
+
 function BalloonGame({ teams }: BalloonGameProps) {
-  const scaleMarkers = Array.from({ length: 11 }, (_, i) => 100 - i * 10);
+  // スケールマーカー（500点から0点まで50点刻み）
+  const scaleMarkers = Array.from({ length: 11 }, (_, i) => INITIAL_POINTS - i * (INITIAL_POINTS / 10));
+  
   const [showDramatic, setShowDramatic] = useState(false);
   const [animatedTeams, setAnimatedTeams] = useState<Team[]>(teams);
   const prevTeamsRef = useRef<string>('');
@@ -102,11 +107,11 @@ function BalloonGame({ teams }: BalloonGameProps) {
 
       <div className="balloons-container">
         <div className="grid-lines">
-          {scaleMarkers.map((value) => (
+          {scaleMarkers.map((value, index) => (
             <div 
               key={value} 
               className="grid-line" 
-              style={{ bottom: `${value}%` }}
+              style={{ bottom: `${(index / 10) * 100}%` }}
             />
           ))}
         </div>

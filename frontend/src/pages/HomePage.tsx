@@ -72,7 +72,7 @@ function HomePage() {
 
   const resetGame = async () => {
     if (!currentGame) return;
-    if (!window.confirm('ゲームをリセットしますか？全チームの持ち点が100に戻ります。')) return;
+    if (!window.confirm('ゲームをリセットしますか？全チームの持ち点が500に戻ります。')) return;
     try {
       await fetch(`${API_URL}/api/games/${currentGame.id}/reset`, { method: 'POST' });
       await fetchGame(currentGame.id);

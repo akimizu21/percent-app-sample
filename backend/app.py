@@ -5,14 +5,10 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 
-# .envファイルから環境変数を読み込み
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
-
-# Secret Key設定（セッション管理やCSRF保護に必要）
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 # Database configuration
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://localhost/percent_quiz')
@@ -21,8 +17,12 @@ if DATABASE_URL.startswith('postgres://'):
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 db = SQLAlchemy(app)
+
+# 初期持ち点の設定
+INITIAL_POINTS = 500
 
 # Models
 class Game(db.Model):
@@ -38,7 +38,7 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'), nullable=False)
     name = db.Column(db.String(50), nullable=False)
-    points = db.Column(db.Integer, default=100)
+    points = db.Column(db.Integer, default=INITIAL_POINTS)
     color = db.Column(db.String(20), default='#FF6B6B')
     answers = db.relationship('TeamAnswer', backref='team', lazy=True, cascade='all, delete-orphan')
 
@@ -120,7 +120,7 @@ def delete_game(game_id):
 def reset_game(game_id):
     game = Game.query.get_or_404(game_id)
     for team in game.teams:
-        team.points = 100
+        team.points = INITIAL_POINTS
         TeamAnswer.query.filter_by(team_id=team.id).delete()
     for question in game.questions:
         question.is_answered = False
@@ -151,13 +151,20 @@ def create_team(game_id):
     game = Game.query.get_or_404(game_id)
     data = request.json
     
-    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
+    # 茶色と黒を追加した色リスト
+    colors = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
+        '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F',
+        '#FF9F43', '#EE5A24', '#6C5CE7', '#00CEC9',
+        '#8B4513', '#2C3E50'  # 茶色、黒
+    ]
     color_index = len(game.teams) % len(colors)
     
     team = Team(
         game_id=game_id,
         name=data.get('name', f'Team {len(game.teams) + 1}'),
-        color=data.get('color', colors[color_index])
+        color=data.get('color', colors[color_index]),
+        points=INITIAL_POINTS
     )
     db.session.add(team)
     db.session.commit()
@@ -177,7 +184,7 @@ def update_team(team_id):
     if 'color' in data:
         team.color = data['color']
     if 'points' in data:
-        team.points = max(0, min(100, data['points']))
+        team.points = max(0, data['points'])
     db.session.commit()
     return jsonify({
         'id': team.id,
@@ -335,7 +342,7 @@ def revise_answers(question_id):
     
     db.session.flush()  # 変更を一時反映
     
-    # 全チームのポイントを再計算（100点から全問題の差分を引く）
+    # 全チームのポイントを再計算（INITIAL_POINTSから全問題の差分を引く）
     for team in game.teams:
         total_difference = 0
         all_answers = TeamAnswer.query.filter_by(team_id=team.id).all()
@@ -345,7 +352,7 @@ def revise_answers(question_id):
             if q and q.game_id == game.id:
                 total_difference += ans.difference
         
-        team.points = max(0, 100 - total_difference)
+        team.points = max(0, INITIAL_POINTS - total_difference)
         
         # この問題の結果を返す
         current_answer = TeamAnswer.query.filter_by(
@@ -385,13 +392,6 @@ def get_question_answers(question_id):
             'answer': a.answer,
             'difference': a.difference
         } for a in answers]
-    })
-    db.session.commit()
-    
-    return jsonify({
-        'question_id': question_id,
-        'correct_answer': question.correct_answer,
-        'results': results
     })
 
 @app.route('/api/games/<int:game_id>/standings', methods=['GET'])

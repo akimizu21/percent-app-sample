@@ -84,9 +84,8 @@
   );
   border: 3px solid;
   border-radius: 4px 4px 10px 10px;
-  padding: 8px 14px;
-  min-width: 60px;
-  max-width: 90px;
+  padding: 8px 10px;
+  min-width: 95px;
   text-align: center;
   box-shadow: 
     inset 0 3px 6px rgba(255, 255, 255, 0.15),
@@ -101,9 +100,8 @@
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   display: block;
+  letter-spacing: -0.03em;
 }
 
 /* クラッシュ時のオーバーレイ */
@@ -202,8 +200,8 @@
   }
   
   .basket-body {
-    padding: 10px 18px;
-    min-width: 70px;
+    padding: 10px 12px;
+    min-width: 105px;
   }
   
   .basket-team-name {
@@ -211,7 +209,7 @@
   }
   
   .explosion-text {
-    font-size: 5rem;
+    font-size: 7rem;
   }
 }
 
@@ -245,21 +243,21 @@
   }
   
   .basket-body {
-    padding: 6px 10px;
-    min-width: 45px;
+    padding: 6px 8px;
+    min-width: 80px;
   }
   
   .basket-team-name {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
   
   .explosion-particle {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
   }
   
   .explosion-text {
-    font-size: 3rem;
+    font-size: 5rem;
   }
 }
 
@@ -290,13 +288,13 @@
   }
   
   .basket-body {
-    padding: 4px 8px;
-    min-width: 35px;
+    padding: 4px 6px;
+    min-width: 65px;
     border-width: 2px;
   }
   
   .basket-team-name {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
   
   .crashed-overlay {
